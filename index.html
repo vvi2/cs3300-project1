@@ -280,10 +280,8 @@
                           'Maroon 5', 'Passenger', 'Alan Walker', 'PSY',
                         'MØ', 'CoComelon', 'Imagine Dragons', 'Dua Lipa',
                         'Katy Perry', 'Post Malone', 'Katy Perry', 'Willy William'];
-        
 
-    
-
+        //these are the 20 bars of actual songs                
         let data20 = [];
         data.forEach(d => {
 
@@ -310,21 +308,45 @@
 
         });
 
+        //making 13 phantom bars for formatting - Stream = 1, Views = 0, danceability varies
+        let phantom13 = [{'Danceability': 0.05, 'Stream': 1, 'Views': 0, 'Artist': "", 'Track': ""},
+                        {'Danceability': 0.1, 'Stream': 1, 'Views': 0, 'Artist': " ", 'Track': ""},
+                        {'Danceability': 0.15, 'Stream': 1, 'Views': 0, 'Artist': " ", 'Track': ""},
+                        {'Danceability': 0.2, 'Stream': 1, 'Views': 0, 'Artist': " ", 'Track': ""},
+                        {'Danceability': 0.25, 'Stream': 1, 'Views': 0, 'Artist': " ", 'Track': ""},
+                        {'Danceability': 0.3, 'Stream': 1, 'Views': 0, 'Artist': " ", 'Track': ""},
+                        {'Danceability': 0.35, 'Stream': 1, 'Views': 0, 'Artist': " ", 'Track': ""},
+                        {'Danceability': 0.4, 'Stream': 1, 'Views': 0, 'Artist': " ", 'Track': ""},
+                        {'Danceability': 0.5, 'Stream': 1, 'Views': 0, 'Artist': " ", 'Track': ""},
+                        {'Danceability': 0.6, 'Stream': 1, 'Views': 0, 'Artist': " ", 'Track': ""},
+                        {'Danceability': 0.7, 'Stream': 1, 'Views': 0, 'Artist': " ", 'Track': ""},
+                        {'Danceability': 0.8, 'Stream': 1, 'Views': 0, 'Artist': " ", 'Track': ""},
+                        {'Danceability': 0.9, 'Stream': 1, 'Views': 0, 'Artist': " ", 'Track': ""}];
+        console.log("PHANTOM13");
+        console.log(phantom13);
+
+        //merge the 2 arrays and sort them
+        data33 = data20.concat(phantom13);
+        console.log("MERGER");
+        console.log(data33);
+
         //pick sort order
 
         //sorting based on total # of streams + views, in descending order (most popular on top)
         //data20.sort( (a,b) => (b['Stream'] + b['Views']) - (a['Stream'] + a['Views']));
 
         //sorting based on danceability buckets, in ascending order (least danceable on top/to the left )
-        data20.sort((a,b) => a['Danceability'] - b['Danceability']);
+        data33.sort((a,b) => a['Danceability'] - b['Danceability']);
 
-        console.log("DATA20");
-        console.log(data20);
+        console.log("SORTED 33");
+        console.log(data33);
 
+
+        //make scales
         const widthScale = d3.scaleLinear().domain([0,1]).range([0, chartWidth]);
         const heightScale = d3.scaleLinear().domain([0,1]).range([0, chartHeight]);
 
-        data20.forEach( (d,i) => {
+        data33.forEach( (d,i) => {
           //get stream % and view % - total bar adds up to 1
           let denom = d['Stream'] + d['Views'];
           let p_stream = d['Stream'] / denom;
@@ -338,17 +360,23 @@
           //TODO: get better stroke colors
           let viewsStrokes = ['#DAF42B', '#8CF246', '#F8A93F', '#5B81F1', '#8F77E9', '#F577F0', '#F4604E', '#1828B1', '#7C4955', '#EB3EC3'];
           let streamStrokes = ['#BED236', '#54A51D', '#C78021', '##2D4A9E', '#3A209B', '#962491', '#AE3527', '#0D1766', '#4A121F', '#89126D' ];
-          //FOR VARSHA: lower bound of bucket is inclusive, upper bound is exclusive
-          if(db >= 0 && db < 0.1) { streamStroke = streamStrokes[0]; viewsStroke = viewsStrokes[0];};
-          if(db >= 0.1 && db < 0.2) { streamStroke = streamStrokes[1]; viewsStroke = viewsStrokes[1];};
-          if(db >= 0.2 && db < 0.3) { streamStroke = streamStrokes[2]; viewsStroke = viewsStrokes[2];};
-          if(db >= 0.3 && db < 0.4) { streamStroke = streamStrokes[3]; viewsStroke = viewsStrokes[3];};
-          if(db >= 0.4 && db < 0.5) { streamStroke = streamStrokes[4]; viewsStroke = viewsStrokes[4];};
-          if(db >= 0.5 && db < 0.6) { streamStroke = streamStrokes[5]; viewsStroke = viewsStrokes[5];};
-          if(db >= 0.6 && db < 0.7) { streamStroke = streamStrokes[6]; viewsStroke = viewsStrokes[6];};
-          if(db >= 0.7 && db < 0.8) { streamStroke = streamStrokes[7]; viewsStroke = viewsStrokes[7];};
-          if(db >= 0.8 && db < 0.9) { streamStroke = streamStrokes[8]; viewsStroke = viewsStrokes[8];};
-          if(db >= 0.9 && db <= 1) { streamStroke = streamStrokes[9]; viewsStroke = viewsStrokes[9];};
+      
+          // if(db >= 0 && db < 0.1) { streamStroke = streamStrokes[0]; viewsStroke = viewsStrokes[0];};
+          // if(db >= 0.1 && db < 0.2) { streamStroke = streamStrokes[1]; viewsStroke = viewsStrokes[1];};
+          // if(db >= 0.2 && db < 0.3) { streamStroke = streamStrokes[2]; viewsStroke = viewsStrokes[2];};
+          // if(db >= 0.3 && db < 0.4) { streamStroke = streamStrokes[3]; viewsStroke = viewsStrokes[3];};
+          if(db >= 0 && db <= 0.4) { streamStroke = 'white';};
+          if(db > 0.4 && db < 0.5) { streamStroke = streamStrokes[4]; viewsStroke = viewsStrokes[4];};
+          if(db == 0.5) { streamStroke = 'white';};
+          if(db > 0.5 && db < 0.6) { streamStroke = streamStrokes[5]; viewsStroke = viewsStrokes[5];};
+          if(db == 0.6) { streamStroke = 'white';};
+          if(db > 0.6 && db < 0.7) { streamStroke = streamStrokes[6]; viewsStroke = viewsStrokes[6];};
+          if(db == 0.7) { streamStroke = 'white';};
+          if(db > 0.7 && db < 0.8) { streamStroke = streamStrokes[7]; viewsStroke = viewsStrokes[7];};
+          if(db == 0.8) { streamStroke = 'white';};
+          if(db > 0.8 && db < 0.9) { streamStroke = streamStrokes[8]; viewsStroke = viewsStrokes[8];};
+          if(db == 0.9) { streamStroke = 'white';};
+          if(db > 0.9 && db <= 1) { streamStroke = streamStrokes[9]; viewsStroke = viewsStrokes[9];};
 
 
 
@@ -392,21 +420,56 @@
             .text(100 - Math.trunc(100*p_stream))
             .style('fill', 'white');
 
-        //TODO: fix label locations
-        //adding song names as labels
+        //TODO: fix width of lin
+        //adding axis line
+        svg.append('line')
+            .attr('x1', widthScale(0))
+            .attr('x2', widthScale(chartWidth))
+            .attr('y1', chartHeight + 10)
+            .attr('y2', chartHeight + 10)
+            .style('stroke', 'black');
 
+        
+        
+
+        
+        //adding song names as labels
         let originx = x - 7.5;
         let originy = chartHeight + 10;
         svg.append('text')
           .attr("class", "barlabel20")
           .attr('x', x - 7.5)
-          .attr('y', chartHeight + 10)
+          .attr('y', chartHeight + 40)
           //.style('transform-origin', "top left")
           //.style('transform', 'rotate(45deg)')
           //.text(d['Track'] + " - " + d['Artist'] + " - Danceability:" + d["Danceability"])
-          .text(d['Track'] + " - " + d['Artist']);
+          //.text(d['Track'] + " - " + d['Artist'])
+          .text(d['Track']);
+
+        //append axis labels as textbox
+        if([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9].indexOf(db) != -1) {
+          svg.append('text')
+              .attr('x', x - 7.5)
+              .attr('y', chartHeight + 30)
+              .text(db);
+
+        };
+
+        //TODO: maybe append axis labels for 0 and 1
+        // svg.append('text')
+        //   .attr('x', 0)
+        //   .attr('y', chartHeight + 30)
+        //   .text(Number(0.0));
+
+        //   svg.append('text')
+        //   .attr('x', width)
+        //   .attr('y', chartHeight + 30)
+        //   .text(Number(1.0));
+
 
         });
+
+
 
         //TODO: get title to be in right spot
         //add chart title
