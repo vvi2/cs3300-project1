@@ -215,7 +215,7 @@
               .attr('class', d['Track'])
               .attr('opacity', .8)
               .attr('index', i)
-              .style('fill', 'green')
+              .style('fill', 'green') //TODO: does mousover count as interaction
               .on('mouseover', function (d, i) {
                 d3.select(this).transition()
                     .duration('50')
@@ -239,13 +239,13 @@
       </script>
 
     <h3>Chiara Signorelli, cts92</h3>
-      <svg id="graph3" height="500" width="800" style="background: white;"></svg>
+      <svg id="graph3" height="800" width="1200" style="background: white;"></svg>
       <script>
         d3.csv('data.csv', d3.autoType).then( (data) => { 
-        const svg = d3.select('svg#graph2');
+        const svg = d3.select('svg#graph3');
         const width = svg.attr('width');
         const height = svg.attr('height');
-        const margins = {top: 30, right: 20, bottom: 50, left: 100};
+        const margins = {top: 30, right: 420, bottom: 50, left: 100};
         const chartWidth = width - margins.left - margins.right;
         const chartHeight = height - margins.top - margins.bottom;
 
@@ -257,27 +257,148 @@
         data = data.filter( d => d.Likes != null);
         data = data.filter( d => d.Stream != null);
 
-        const streamViewsTotalExtent = d3.extent(data, d => (d['Stream'] + d['Views']) );
-        const streamViewsTotalScale = d3.scaleLinear().domain(streamViewsTotalExtent)
-                            .range([0, chartHeight]);
+        //choose only songs with top 20 streams + views total, must select
+        //based on both track & artist bc of duplicates from features in og dataset
+        let tracks20 = ['Despacito', 'Shape of You', 'See You Again (feat. Charlie Puth)', 'Uptown Funk (feat. Bruno Mars)',
+                          'Thinking out Loud', 'Perfect', 'Counting Stars', 'Sorry',
+                        'Sugar', 'Let Her Go', 'Faded', 'Gangnam Style (강남스타일)', 
+                        'Lean On', 'Wheels on the Bus', 'Believer', 'New Rules',
+                          'Roar','Sunflower - Spider-Man: Into the Spider-Verse', 'Dark Horse', 'Mi Gente'];
 
-        const danceabilityExtent = d3.extent(data, d => d['Danceability'] );
-        const danceabilityScale = d3.scaleLinear().domain(danceabilityExtent)
-                            .range([0, chartWidth]);   
-                            
+        let artists20 = ['Luis Fonsi', 'Ed Sheeran', 'Charlie Puth', 'Mark Ronson',
+                        'Ed Sheeran', 'Ed Sheeran', 'OneRepublic', 'Justin Bieber',
+                          'Maroon 5', 'Passenger', 'Alan Walker', 'PSY',
+                        'MØ', 'CoComelon', 'Imagine Dragons', 'Dua Lipa',
+                        'Katy Perry', 'Post Malone', 'Katy Perry', 'Willy William'];
         
 
+    
 
+        let data20 = [];
+        data.forEach(d => {
 
+          track_i = tracks20.indexOf(d['Track']);
+          artist_i = artists20.indexOf(d['Artist']);
+
+          if(track_i > -1 && artist_i > -1 && track_i == artist_i){
+            data20.push(d);
+          };
+
+          //pushing Thinking Out Loud, Perfect, and Dark Horse directly
+          if(d['Track'] == 'Thinking out Loud' && d['Artist'] == 'Ed Sheeran'){
+            data20.push(d);
+          };
+
+          if(d['Track'] == 'Perfect' && d['Artist'] == 'Ed Sheeran'){
+            data20.push(d);
+          };
+
+          if(d['Track'] == 'Dark Horse' && d['Artist'] == 'Katy Perry'){
+            data20.push(d);
+          };
 
 
         });
 
+        //TODO: pick sort order
+
+        //sorting based on total # of streams + views, in descending order (most popular on top)
+        //data20.sort( (a,b) => (b['Stream'] + b['Views']) - (a['Stream'] + a['Views']));
+
+        //sorting based on danceability buckets, in descending order (most danceable on top)
+        data20.sort((a,b) => b['Danceability'] - a['Danceability']);
+
+        console.log("DATA20");
+        console.log(data20);
+
+        const widthScale = d3.scaleLinear().domain([0,1]).range([0, chartWidth]);
+
+        data20.forEach( (d,i) => {
+          //get stream % and view % - total bar adds up to 1
+          let denom = d['Stream'] + d['Views'];
+          let p_stream = d['Stream'] / denom;
+          let p_views = d['Views'] / denom;
+
+          //assign bars a color scheme based on danceability bucket
+          let streamStroke = "gray";
+          let viewsStroke = "black";
+          let db = d['Danceability'];
+
+          //TODO: get better stroke colors
+          let streamStrokes = ['#DAF42B', '#8CF246', '#F8A93F', '#5B81F1', '#8F77E9', '#F577F0', '#F4604E', '#1828B1', '#7C4955', '#EB3EC3'];
+          let viewsStrokes = ['#BED236', '#54A51D', '#C78021', '##2D4A9E', '#3A209B', '#962491', '#AE3527', '#0D1766', '#4A121F', '#89126D' ];
+          //FOR VARSHA: lower bound of bucket is inclusive, upper bound is exclusive
+          if(db >= 0 && db < 0.1) { streamStroke = streamStrokes[0]; viewsStroke = viewsStrokes[0];};
+          if(db >= 0.1 && db < 0.2) { streamStroke = streamStrokes[1]; viewsStroke = viewsStrokes[1];};
+          if(db >= 0.2 && db < 0.3) { streamStroke = streamStrokes[2]; viewsStroke = viewsStrokes[2];};
+          if(db >= 0.3 && db < 0.4) { streamStroke = streamStrokes[3]; viewsStroke = viewsStrokes[3];};
+          if(db >= 0.4 && db < 0.5) { streamStroke = streamStrokes[4]; viewsStroke = viewsStrokes[4];};
+          if(db >= 0.5 && db < 0.6) { streamStroke = streamStrokes[5]; viewsStroke = viewsStrokes[5];};
+          if(db >= 0.6 && db < 0.7) { streamStroke = streamStrokes[6]; viewsStroke = viewsStrokes[6];};
+          if(db >= 0.7 && db < 0.8) { streamStroke = streamStrokes[7]; viewsStroke = viewsStrokes[7];};
+          if(db >= 0.8 && db < 0.9) { streamStroke = streamStrokes[8]; viewsStroke = viewsStrokes[8];};
+          if(db >= 0.9 && db <= 1) { streamStroke = streamStrokes[9]; viewsStroke = viewsStrokes[9];};
 
 
 
 
+          //add stream % on bottom of bar
+          //TODO: to switch direction, just switch x's and y's
+          let y = i*chartWidth/20 + 10;
+          svg.append("line")
+              .attr('id', 'streamline')
+              .attr('y1', y)
+              .attr('y2', y)
+              .attr('x1', widthScale(0))
+              .attr('x2', widthScale(p_stream))
+              .style("stroke", streamStroke)
+              .style("stroke-width", 20);
 
+          //labelling p_stream bar
+          svg.append('text')
+            .attr('y', y + 5)
+            .attr('x', widthScale(p_stream) - 25)
+            .text(Math.trunc(100*p_stream));
+
+
+         //add views % on top of bar 
+         svg.append("line")
+            .attr('id', 'viewsline')
+            .attr('y1', y)
+            .attr('y2', y)
+            .attr('x1', widthScale(1))
+            .attr('x2', widthScale(p_stream))
+            .style('stroke', viewsStroke)
+            .style('stroke-width', 20);
+
+        //labelling p_views bar
+        svg.append('text')
+            .attr('y', y + 5)
+            .attr('x', widthScale(p_views) - (widthScale(p_views) - widthScale(p_stream)) + 10)
+            .text(100 - Math.trunc(100*p_stream));
+
+        //adding song names as labels
+        svg.append('text')
+          .attr('y', y + 5)
+          .attr('x', chartWidth + 10)
+          //.text(d['Track'] + " - " + d['Artist'] + " - Danceability:" + d["Danceability"])
+          .text(d['Track'] + " - " + d['Artist']);
+
+        });
+
+        //TODO: get title to be in right spot
+        //add chart title
+        svg.append('text')
+          .attr("text-anchor", "end")
+          .attr("x", chartWidth/2)
+          .attr("y", 15)
+          .attr("font-family", "Arial")
+          .text("TIT")
+          .style('fill', 'white');
+            
+               
+
+        });
 
       </script>
   </body>
