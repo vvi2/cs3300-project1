@@ -53,7 +53,7 @@
         const danceabilityScale = d3.scaleLinear().domain(danceabilityExtent)
                             .range([0, chartWidth]);
 
-        const viewsExtent = d3.extent(data, d => d['Views'] );
+        const viewsExtent = d3.extent(data, d => d['Views']+d['Stream'] );
         const viewsScale = d3.scaleLinear().domain(viewsExtent)
                             .range([0, 10]);
 
@@ -102,21 +102,32 @@
           .attr("y", height-4)
           .attr("font-family", "Arial")
           .text("Danceability");
+
+        let tracks20 = ['Despacito', 'Shape of You', 'See You Again (feat. Charlie Puth)', 'Uptown Funk (feat. Bruno Mars)',
+          'Thinking out Loud', 'Perfect', 'Counting Stars', 'Sorry',
+          'Sugar', 'Let Her Go', 'Faded', 'Gangnam Style (강남스타일)', 
+          'Lean On', 'Wheels on the Bus', 'Believer', 'New Rules',
+          'Roar','Sunflower - Spider-Man: Into the Spider-Verse', 'Dark Horse', 'Mi Gente'];
+        function get_color(track){
+          if(tracks20.indexOf(track)!=-1){
+            return '#CA6702';
+            
+          }
+          return '#005F73';
+        }
           
         data.forEach( (d, i) => {
           chartArea.append('circle')
               .attr('cx', danceabilityScale(d['Danceability']))
               .attr('cy', valenceScale(d['Valence']))
-              .attr('r', viewsScale(d['Views']))
-              .attr('rad', viewsScale(d['Views']))
+              .attr('r', viewsScale(d['Views']+d['Stream']))
               .attr('class', d['Track'])
               .attr('opacity', .8)
               .attr('index', i)
-              .style('fill', 'red')
+              .style('fill', get_color(d['Track']))
               .on('mouseover', function (d, i) {
                 d3.select(this).transition()
                     .duration('50')
-                    .style('fill', 'blue')
                 chartArea.append("text")
                   .attr("x",10)
                   .attr("y",20)
@@ -126,7 +137,6 @@
               .on('mouseout', function (d, i) {
                 d3.select(this).transition()
                   .duration('50')
-                  .style('fill', 'red')
                 chartArea.selectAll("text")
                   .remove()
               });
@@ -358,8 +368,8 @@
           let db = d['Danceability'];
 
           //TODO: get better stroke colors
-          let viewsStrokes = ['#DAF42B', '#8CF246', '#F8A93F', '#5B81F1', '#8F77E9', '#F577F0', '#F4604E', '#1828B1', '#7C4955', '#EB3EC3'];
-          let streamStrokes = ['#BED236', '#54A51D', '#C78021', '##2D4A9E', '#3A209B', '#962491', '#AE3527', '#0D1766', '#4A121F', '#89126D' ];
+          let viewsStrokes = ['#e89698', '#f3958c', '#fda981', '#fec286', '#ffd992', '#f6efdb', '#d4ede5', '#7cf4f6', '#61e4ff', '#3dc9ff'];
+          let streamStrokes = ['#9B2226', '#AE2012', '#BB3E03', '#CA6702', '#EE9B00', '#E9D8A6', '#94D2BD', '#0A9396', '#005F73', '#001219' ];
       
           // if(db >= 0 && db < 0.1) { streamStroke = streamStrokes[0]; viewsStroke = viewsStrokes[0];};
           // if(db >= 0.1 && db < 0.2) { streamStroke = streamStrokes[1]; viewsStroke = viewsStrokes[1];};
@@ -418,7 +428,7 @@
             .attr('x', x - 7.5)
             .attr('y', heightScale(1 - p_stream) - 10)
             .text(100 - Math.trunc(100*p_stream))
-            .style('fill', 'white');
+            .style('fill', 'black');
 
         //TODO: fix width of lin
         //adding axis line
