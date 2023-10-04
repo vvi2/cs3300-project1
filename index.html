@@ -255,7 +255,7 @@
         const svg = d3.select('svg#graph3');
         const width = svg.attr('width');
         const height = svg.attr('height');
-        const margins = {top: 30, right: 420, bottom: 450, left: 100};
+        const margins = {top: 230, right: 420, bottom: 250, left: 100};
         const chartWidth = width - margins.left - margins.right;
         const chartHeight = height - margins.top - margins.bottom;
 
@@ -344,7 +344,7 @@
 
         //make scales
         const widthScale = d3.scaleLinear().domain([0,1]).range([0, chartWidth]);
-        const heightScale = d3.scaleLinear().domain([0,1]).range([0, chartHeight]);
+        const heightScale = d3.scaleLinear().domain([0,1]).range([40, chartHeight]);
 
         data33.forEach( (d,i) => {
           //get stream % and view % - total bar adds up to 1
@@ -383,7 +383,7 @@
 
           //add stream % on bottom of bar
           //to switch direction, just switch x's and y's
-          let x = i*chartWidth/20 + 10;
+          let x = i*chartWidth/30 + 10;
           svg.append("line")
               .attr('id', 'streamline')
               .attr('x1', x)
@@ -478,8 +478,8 @@
           .attr("x", chartWidth/2)
           .attr("y", 15)
           .attr("font-family", "Arial")
-          .text("TIT")
-          .style('fill', 'white');
+          .text("TITLE")
+          .style('fill', 'black');
             
                
 
