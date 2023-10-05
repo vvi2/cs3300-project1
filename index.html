@@ -260,6 +260,8 @@
     <h3>Chiara Signorelli, cts92</h3>
       <svg id="graph3" height="1200" width="1200" style="background: white;"></svg>
       <script>
+        let viewsStrokes = ['#e89698', '#f3958c', '#fda981', '#fec286', '#ffd992', '#f6efdb', '#d4ede5', '#7cf4f6', '#61e4ff', '#3dc9ff'];
+        let streamStrokes = ['#9B2226', '#AE2012', '#BB3E03', '#CA6702', '#EE9B00', '#E9D8A6', '#94D2BD', '#0A9396', '#005F73', '#001219' ];
 
         d3.csv('data.csv', d3.autoType).then( (data) => { 
         const svg = d3.select('svg#graph3');
@@ -496,6 +498,120 @@
 
         });
 
+      </script>
+    <h3>Varsha Iyer (vvi2)</h3>
+      <svg id="graph4" height="500" width="800" style="background: white;"></svg>
+      <script>
+        //Youtube views/Spotify
+        d3.csv('data.csv', d3.autoType).then( (data) => {
+          const svg = d3.select('svg#graph4');
+          const width = svg.attr('width');
+          const height = svg.attr('height');
+          const margins = {top: 50, right: 50, bottom: 50, left: 30};
+          const chartWidth = width - margins.left - margins.right;
+          const chartHeight = height - margins.top - margins.bottom;
+
+          let chartArea = svg.append('g')
+                            .attr('transform',`translate(${margins.left},${margins.top})`);
+          data = data.filter( d => d.Danceability != null);
+          data = data.filter( d => d.Valence != null);
+          data = data.filter( d => d.Views != null);
+          data = data.filter( d => d.Likes != null);
+          data = data.filter( d => d.Stream != null);
+
+          let dance1 = data.filter( d => (d.Danceability >=0 && d.Danceability < 0.1));
+
+          let dance2 = data.filter( d => (d.Danceability >= 0.1 && d.Danceability < 0.2));
+
+          let dance3 = data.filter( d => (d.Danceability >= 0.2 && d.Danceability < 0.3));
+
+          let dance4 = data.filter( d => (d.Danceability >= 0.3 && d.Danceability < 0.4));
+
+          let dance5 = data.filter( d => (d.Danceability >= 0.4 && d.Danceability < 0.5));
+
+          let dance6 = data.filter( d => (d.Danceability >= 0.5 && d.Danceability < 0.6));
+
+          let dance7 = data.filter( d => (d.Danceability >= 0.6 && d.Danceability < 0.7));
+
+          let dance8 = data.filter( d => (d.Danceability >= 0.7 && d.Danceability < 0.8));
+
+          let dance9 = data.filter( d => (d.Danceability >= 0.8 && d.Danceability < 0.9));
+
+          let dance10 = data.filter( d => (d.Danceability >= 0.9 && d.Danceability <= 1));
+
+          let dance_bucket_data = [dance1, dance2, dance3, dance4, dance5, dance6, dance7, dance8, dance9, dance10];
+
+          console.log(dance_bucket_data);
+
+          let pop_data = [];
+
+          dance_bucket_data.forEach((d, i) =>{
+            let streams = 0;
+            let views = 0;
+            d.forEach((d, i) =>{
+              streams += d['Stream'];
+              views += d['Views'];
+            })
+            pop_data.push([i, (streams / (streams + views)), (views / (streams + views))]);
+          })
+
+          console.log("pop data", pop_data);
+
+          const widthScale = d3.scaleLinear().domain([0,1]).range([0, chartWidth]);
+          const heightScale = d3.scaleLinear().domain([0,1]).range([0, chartHeight]);
+        
+          pop_data.forEach( (d, i) => {
+            let p_stream = d[1];
+            let p_views = d[2];
+            let db = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9];
+
+            let x = i*chartWidth/10 + 35 + margins.left;
+            
+            svg.append("line")
+                .attr('id', 'streamline')
+                .attr('x1', x)
+                .attr('x2', x)
+                .attr('y1', heightScale(1 - p_stream))
+                .attr('y2', heightScale(1))
+                .style("stroke", streamStrokes[i])
+                .style("stroke-width", 70);
+
+            //labelling p_stream bar
+            //TODO: center number on bar
+            svg.append('text')
+              .attr('x', x - 7.5)
+              .attr('y', heightScale(1 - p_stream) + 25)
+              .text(Math.trunc(100*p_stream))
+              .style("stroke-width", 0)
+              .style('fill', 'white')
+
+
+            //add views % on top of bar 
+            svg.append("line")
+                .attr('id', 'viewsline')
+                .attr('x1', x)
+                .attr('x2', x)
+                .attr('y1', heightScale(0))
+                .attr('y2', heightScale(1 - p_stream))
+                .style('stroke', viewsStrokes[i])
+                .style('stroke-width', 70);
+
+            //labelling p_views bar
+            //TODO: center number on bar
+            svg.append('text')
+                .attr('x', i === 0 ? x - 3.5 : x - 7.5)
+                .attr('y', heightScale(1 - p_stream) - 10)
+                .text(100 - Math.trunc(100*p_stream))
+                .style("stroke-width", 0)
+                .style('fill', 'white')
+          });
+          //adding axis line
+          let bottomAxis = d3.axisBottom(widthScale).ticks(10);
+          let element = svg.append('g')
+                            .attr('class', 'x axis')
+                            .attr('transform', `translate(${margins.left},${chartHeight+margins.bottom})`)
+                            .call(bottomAxis);
+        });
       </script>
   </body>
 </html>
