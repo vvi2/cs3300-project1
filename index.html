@@ -367,7 +367,6 @@
           let viewsStroke = "black";
           let db = d['Danceability'];
 
-          //TODO: get better stroke colors
           let viewsStrokes = ['#e89698', '#f3958c', '#fda981', '#fec286', '#ffd992', '#f6efdb', '#d4ede5', '#7cf4f6', '#61e4ff', '#3dc9ff'];
           let streamStrokes = ['#9B2226', '#AE2012', '#BB3E03', '#CA6702', '#EE9B00', '#E9D8A6', '#94D2BD', '#0A9396', '#005F73', '#001219' ];
       
@@ -404,7 +403,6 @@
               .style("stroke-width", 20);
 
           //labelling p_stream bar
-          //TODO: center number on bar
           svg.append('text')
             .attr('x', x - 7.5)
             .attr('y', heightScale(1 - p_stream) + 25)
@@ -423,18 +421,21 @@
             .style('stroke-width', 20);
 
         //labelling p_views bar
-        //TODO: center number on bar
+        //making an if statement so phantom bars still have white writing
+        let viewtextcolor = 'black';
+        if([0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.5,0.6,0.7,0.8,0.9].indexOf(db) != -1){
+          viewtextcolor = 'white';
+        };
         svg.append('text')
             .attr('x', x - 7.5)
             .attr('y', heightScale(1 - p_stream) - 10)
             .text(100 - Math.trunc(100*p_stream))
-            .style('fill', 'black');
+            .style('fill', viewtextcolor);
 
-        //TODO: fix width of lin
         //adding axis line
         svg.append('line')
             .attr('x1', widthScale(0))
-            .attr('x2', widthScale(chartWidth))
+            .attr('x2', 755)
             .attr('y1', chartHeight + 10)
             .attr('y2', chartHeight + 10)
             .style('stroke', 'black');
@@ -461,34 +462,34 @@
           svg.append('text')
               .attr('x', x - 7.5)
               .attr('y', chartHeight + 30)
+              .attr("font-family", "Arial")
               .text(db);
 
         };
 
-        //TODO: maybe append axis labels for 0 and 1
-        // svg.append('text')
-        //   .attr('x', 0)
-        //   .attr('y', chartHeight + 30)
-        //   .text(Number(0.0));
+        //append axis labels for 0 and 1
+        svg.append('text')
+          .attr('x', 0)
+          .attr('y', chartHeight + 30)
+          .attr("font-family", "Arial")
+          .text(0);
 
-        //   svg.append('text')
-        //   .attr('x', width)
-        //   .attr('y', chartHeight + 30)
-        //   .text(Number(1.0));
+          svg.append('text')
+          .attr('x', 750)
+          .attr('y', chartHeight + 30)
+          .attr("font-family", "Arial")
+          .text(1);
 
 
         });
 
-
-
-        //TODO: get title to be in right spot
         //add chart title
         svg.append('text')
-          .attr("text-anchor", "end")
-          .attr("x", chartWidth/2)
+          //.attr("text-anchor", "")
+          .attr("x", chartWidth/2 - 150)
           .attr("y", 15)
           .attr("font-family", "Arial")
-          .text("TITLE")
+          .text("Stream % vs. Views % of Popularity, Top 20 Most Popular Songs")
           .style('fill', 'black');
             
                
