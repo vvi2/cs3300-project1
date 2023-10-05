@@ -493,6 +493,72 @@
           .attr("font-family", "Arial")
           .text("Stream % vs. Views % of Popularity, Top 20 Most Popular Songs")
           .style('fill', 'black');
+
+
+          console.log('ChartWisth');
+          console.log(chartWidth);
+
+        //add mean lines for each bucket
+        let seis = [9,10,12,13,15,20,22,28,30,31,33,33];
+        //let xs = chartWidth/30 - 10 - 5;
+        let xe = chartWidth/30 - 10 + 5;
+
+        //bucket 0.4-0.5
+        svg.append("line")
+            .attr('x1',seis[1]*chartWidth/30 + 2.5)
+            .attr('x2', seis[1]*xe)
+            .attr('y1', heightScale(.39))
+            .attr('y2', heightScale(.39))
+            .style('stroke-width', 3)
+            .style('stroke', '#E41751');
+
+        //bucket 0.5-0.6
+        svg.append("line")
+            .attr('x1',seis[3]*chartWidth/30 + 2.5)
+            .attr('x2', seis[3]*xe +15)
+            .attr('y1', heightScale(.38))
+            .attr('y2', heightScale(.38))
+            .style('stroke-width', 3)
+            .style('stroke', '#E41751');
+
+        //bucket 0.6-0.7
+        svg.append("line")
+            .attr('x1',seis[5]*chartWidth/30 + 2.5)
+            .attr('x2', seis[5]*xe -40)
+            .attr('y1', heightScale(.40))
+            .attr('y2', heightScale(.40))
+            .style('stroke-width', 3)
+            .style('stroke', '#E41751');
+
+        //bucket 0.7-0.8
+        svg.append("line")
+            .attr('x1',seis[7]*chartWidth/30 + 2.5)
+            .attr('x2', seis[7]*xe -25)
+            .attr('y1', heightScale(.44))
+            .attr('y2', heightScale(.44))
+            .style('stroke-width', 3)
+            .style('stroke', '#E41751');
+
+        //bucket 0.8-0.9
+        svg.append("line")
+            .attr('x1',seis[9]*chartWidth/30 + 2.5)
+            .attr('x2', seis[9]*xe + 105)
+            .attr('y1', heightScale(.47))
+            .attr('y2', heightScale(.47))
+            .style('stroke-width', 3)
+            .style('stroke', '#E41751');
+
+        //bucket 0.9-1.0
+        svg.append("line")
+            .attr('x1',seis[9]*chartWidth/30 + 47.5)
+            .attr('x2', seis[9]*xe + 172.5)
+            .attr('y1', heightScale(.46))
+            .attr('y2', heightScale(.46))
+            .style('stroke-width', 3)
+            .style('stroke', '#E41751');
+
+        
+
             
                
 
