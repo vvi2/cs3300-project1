@@ -147,7 +147,7 @@
       <br>
       <br>
       <br>
-      <svg id="graph2" height="500" width="800" style="background: white;">
+      <!-- <svg id="graph2" height="500" width="800" style="background: white;">
       </svg>
       <script>
         d3.csv('data.csv', d3.autoType).then( (data) => { 
@@ -255,15 +255,17 @@
 
         });
         }, (error) => { console.log(error)} );
-      </script>
+      </script> -->
     <h3>Varsha Iyer (vvi2)</h3>
     <svg id="graph4" height="500" width="800" style="background: white; margin-left: 80;"></svg>
-    <svg id="legend" height="500" width="250" style="background: white;"> </svg>
+    <svg id="legend4" height="500" width="250" style="background: white;"> </svg>
     <script>
+      let viewsStrokes = ['#e89698', '#f3958c', '#fda981', '#fec286', '#ffd992', '#f6efdb', '#d4ede5', '#7cf4f6', '#61e4ff', '#3dc9ff'];
+      let streamStrokes = ['#9B2226', '#AE2012', '#BB3E03', '#CA6702', '#EE9B00', '#E9D8A6', '#94D2BD', '#0A9396', '#005F73', '#001219' ];
       //Youtube views/Spotify
       d3.csv('data.csv', d3.autoType).then( (data) => {
         const svg = d3.select('svg#graph4');
-        const legend = d3.select('svg#legend');
+        const legend = d3.select('svg#legend4');
         const width = svg.attr('width');
         const height = svg.attr('height');
         const margins = {top: 40, right: 30, bottom: 50, left: 0};
@@ -400,12 +402,21 @@
           .attr('y2', 100)
           .style('stroke', "#666666")
           .style('stroke-width', 50);
+        //Legend
+        //Bars Key
+        let legendWidth = legend.attr("width");
         legend.append("text")
-          .attr("x", 3)
+          .attr("x", (legendWidth/2)-20)
+          .attr("y", 50)
+          .attr("font-family", "Arial")
+          .style("fill", "black")
+          .text("KEY");
+        legend.append("text")
+          .attr("x", 0)
           .attr("y", 80)
           .attr("font-family", "Arial")
           .style("fill", "black")
-          .text("Legend");
+          .text("Proportion");
         legend.append("text")
           .attr("x", 70)
           .attr("y", 180)
@@ -418,18 +429,46 @@
           .attr("font-family", "Arial")
           .style("fill", "black")
           .text("Stream %");
+        //Danceability Key
+        legend.append("text")
+          .attr("x", 160)
+          .attr("y", 80)
+          .attr("font-family", "Arial")
+          .style("fill", "black")
+          .text("Danceability");
+        for(let i = 0; i < viewsStrokes.length; i++){
+          legend.append("rect")
+            .attr("x", 170)
+            .attr("y", 105+(i*31))
+            .attr("width", 20)
+            .attr("height", 10)
+            .attr("fill", viewsStrokes[i]);
+          legend.append("text")
+            .attr("x", 200)
+            .attr("y", 120+(i*31))
+            .attr("font-family", "Arial")
+            .style("fill", "black")
+            .text(i===9 ? "0.9-1.0" : `0.${i}-0.${i+1}`);
+          legend.append("rect")
+            .attr("x", 170)
+            .attr("y", 115+(i*31))
+            .attr("width", 20)
+            .attr("height", 10)
+            .attr("fill", streamStrokes[i]);
+        }
+
+          
         
       });
     </script>
 
     <h3>Chiara Signorelli, cts92</h3>
       <svg id="graph3" height="1200" width="1200" style="background: white;"></svg>
+      <svg id="legend3" height="500" width="500" style="background: white;"> </svg>
       <script>
-        let viewsStrokes = ['#e89698', '#f3958c', '#fda981', '#fec286', '#ffd992', '#f6efdb', '#d4ede5', '#7cf4f6', '#61e4ff', '#3dc9ff'];
-        let streamStrokes = ['#9B2226', '#AE2012', '#BB3E03', '#CA6702', '#EE9B00', '#E9D8A6', '#94D2BD', '#0A9396', '#005F73', '#001219' ];
-
         d3.csv('data.csv', d3.autoType).then( (data) => { 
         const svg = d3.select('svg#graph3');
+        const legend = d3.select('svg#legend3');
         const width = svg.attr('width');
         const height = svg.attr('height');
         const margins = {top: 230, right: 420, bottom: 250, left: 100};
@@ -721,6 +760,94 @@
             .attr('y2', heightScale(.46))
             .style('stroke-width', 3)
             .style('stroke', '#E41751');
+
+        //Legend
+        legend.append("line")
+          .attr('x1', 30)
+          .attr('x2', 30)
+          .attr('y1', 400)
+          .attr('y2', 250)
+          .style('stroke', "#303030")
+          .style('stroke-width', 50);
+        legend.append("line")
+          .attr('x1', 30)
+          .attr('x2', 30)
+          .attr('y1', 250)
+          .attr('y2', 100)
+          .style('stroke', "#666666")
+          .style('stroke-width', 50);
+        legend.append("line")
+          .attr('x1', 0)
+          .attr('x2', 60)
+          .attr('y1', 240)
+          .attr('y2', 240)
+          .style('stroke-width', 3)
+          .style('stroke', '#E41751');
+        //Bars Key
+        let legendWidth = legend.attr("width");
+        legend.append("text")
+          .attr("x", (legendWidth/2)-50)
+          .attr("y", 50)
+          .attr("font-family", "Arial")
+          .style("fill", "black")
+          .text("KEY");
+        legend.append("text")
+          .attr("x", 70)
+          .attr("y", 240)
+          .attr("font-family", "Arial")
+          .style("fill", "black")
+          .text("Pop. Proportion Split for");
+        legend.append("text")
+          .attr("x", 70)
+          .attr("y", 260)
+          .attr("font-family", "Arial")
+          .style("fill", "black")
+          .text("Corresponding Danceability Range");
+        legend.append("text")
+          .attr("x", 0)
+          .attr("y", 80)
+          .attr("font-family", "Arial")
+          .style("fill", "black")
+          .text("Proportion");
+        legend.append("text")
+          .attr("x", 70)
+          .attr("y", 180)
+          .attr("font-family", "Arial")
+          .style("fill", "black")
+          .text("Views %");
+        legend.append("text")
+          .attr("x", 70)
+          .attr("y", 330)
+          .attr("font-family", "Arial")
+          .style("fill", "black")
+          .text("Stream %");
+        //Danceability Key
+        legend.append("text")
+          .attr("x", 325)
+          .attr("y", 80)
+          .attr("font-family", "Arial")
+          .style("fill", "black")
+          .text("Danceability");
+        for(let i = 0; i < viewsStrokes.length; i++){
+          legend.append("rect")
+            .attr("x", 330)
+            .attr("y", 105+(i*31))
+            .attr("width", 20)
+            .attr("height", 10)
+            .attr("fill", viewsStrokes[i]);
+          legend.append("text")
+            .attr("x", 360)
+            .attr("y", 120+(i*31))
+            .attr("font-family", "Arial")
+            .style("fill", "black")
+            .text(i===9 ? "0.9-1.0" : `0.${i}-0.${i+1}`);
+          legend.append("rect")
+            .attr("x", 330)
+            .attr("y", 115+(i*31))
+            .attr("width", 20)
+            .attr("height", 10)
+            .attr("fill", streamStrokes[i]);
+        }
 
         
 
