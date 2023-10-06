@@ -25,13 +25,15 @@
     </style>
   </head>
   <body>
-    <h3>Graph 1: How Danceability, Valence, and Popularity of Songs are Related</h3>
-    <p>DESCRIPTION</p>
-      <svg id="graph1" height="500" width="800" style="background: white;">
-      </svg>
+    <h1 style="font-family: Arial;">Spotify vs YouTube</h1>
+    <h3 style="font-family: Arial;">Graph 1: How Danceability, Valence, and Popularity of Songs are Related</h3>
+    <p style="font-family: Arial;">We want to see how the danceability and the valence of the song affect each other and if the popularity of song <br /> (number of Spotify streams + number of YouTube views) is affected by either value. We also pulled out the Top 20<br />Most Popular Songs to see how they compare to the rest of the population.</p>
+      <svg id="graph1" height="500" width="800" style="background: white;"> </svg>
+      <svg id="legend1" height="500" width="310" style="background: white;"> </svg>
       <script>
         d3.csv('data.csv', d3.autoType).then( (data) => { 
         const svg = d3.select('svg#graph1');
+        const legend1 = d3.select('svg#legend1');
         const width = svg.attr('width');
         const height = svg.attr('height');
         const margins = {top: 30, right: 10, bottom: 50, left: 100};
@@ -104,6 +106,40 @@
           .attr("font-family", "Arial")
           .text("Danceability");
 
+        let legend1_width = legend1.attr("width");
+        let legend1_height = legend1.attr("height");
+
+        legend1.append("text")
+          .attr("x", 140)
+          .attr("y", legend1_height/2 - 60)
+          .attr("font-family", "Arial")
+          .style("fill", "black")
+          .text("KEY");
+        legend1.append("circle")
+              .attr('cx', 50)
+              .attr('cy', legend1_height/2 - 20)
+              .attr('r', 10)
+              .attr('opacity', .8)
+              .style('fill', "#CA6702");
+        legend1.append("circle")
+              .attr('cx', 50)
+              .attr('cy', legend1_height/2 + 20)
+              .attr('r', 10)
+              .attr('opacity', .8)
+              .style('fill', "#005F73");
+        legend1.append("text")
+          .attr("x", 70)
+          .attr("y", legend1_height/2 - 15)
+          .attr("font-family", "Arial")
+          .style("fill", "black")
+          .text("Top 20 Most Popular Songs");
+        legend1.append("text")
+          .attr("x", 70)
+          .attr("y", legend1_height/2 + 25)
+          .attr("font-family", "Arial")
+          .style("fill", "black")
+          .text("Non Top 20 Most Popular Songs");
+
         let tracks20 = ['Despacito', 'Shape of You', 'See You Again (feat. Charlie Puth)', 'Uptown Funk (feat. Bruno Mars)',
           'Thinking out Loud', 'Perfect', 'Counting Stars', 'Sorry',
           'Sugar', 'Let Her Go', 'Faded', 'Gangnam Style (강남스타일)', 
@@ -145,120 +181,8 @@
         });
         }, (error) => { console.log(error)} );
       </script>
-      <br>
-      <br>
-      <br>
-      <!-- <svg id="graph2" height="500" width="800" style="background: white;">
-      </svg>
-      <script>
-        d3.csv('data.csv', d3.autoType).then( (data) => { 
-        const svg = d3.select('svg#graph2');
-        const width = svg.attr('width');
-        const height = svg.attr('height');
-        const margins = {top: 30, right: 20, bottom: 50, left: 100};
-        const chartWidth = width - margins.left - margins.right;
-        const chartHeight = height - margins.top - margins.bottom;
-        
-        let chartArea = svg.append('g')
-                           .attr('transform',`translate(${margins.left},${margins.top})`);
-        data = data.filter( d => d.Danceability != null)
-        data = data.filter( d => d.Valence != null)
-        data = data.filter( d => d.Views != null)
-        data = data.filter( d => d.Likes != null)
-        data = data.filter( d => d.Stream != null)
-
-        const streamExtent = d3.extent(data, d => d['Stream'] );
-        const streamScale = d3.scaleLinear().domain(streamExtent).range([chartHeight, 0]);
-        
-        const viewsExtent = d3.extent(data, d => d['Views'] );
-        const viewsScale = d3.scaleLinear().domain(viewsExtent)
-                            .range([0, chartWidth]);
-
-        const durationExtent = d3.extent(data, d => d['Duration_ms'] );
-        const durationScale = d3.scaleLinear().domain(durationExtent)
-                            .range([0, 10]);
-
-        console.log(durationExtent)
-        console.log(streamExtent)
-        console.log(viewsExtent)
-        
-
-        let leftAxis = d3.axisLeft(streamScale); 
-        svg.append('g')
-          .attr('class', 'y axis')
-          .attr('transform',`translate(${margins.left-10},${margins.top})`) 
-          .call(leftAxis);
-        let bottomAxis = d3.axisBottom(viewsScale).ticks(6)
-        svg.append('g')
-          .attr('class', 'y axis')
-          .attr('transform',`translate(${margins.left},${chartHeight+margins.top+10})`)
-          .call(bottomAxis);
-        let leftGridlines = d3.axisLeft(streamScale)
-          .tickSize(-chartWidth-10)
-          .tickFormat('');
-        svg.append('g')
-          .attr('class', 'y gridlines')
-          .attr('transform',`translate(${margins.left-10},${margins.top})`)
-          .lower()
-          .call(leftGridlines);        
-        let bottomGridlines = d3.axisBottom(viewsScale)
-          .tickSize(-chartHeight-10)
-          .tickFormat('')
-          .ticks(6);
-        svg.append('g')
-          .attr('class', 'x gridlines')
-          .attr('transform',`translate(${margins.left},${chartHeight+margins.top+10})`)
-          .lower()
-          .call(bottomGridlines);
-
-        svg.append("text")
-          .attr("class", "title")
-          .attr("text-anchor", "end")
-          .attr("x", width/2+300)
-          .attr("y", 15)
-          .attr("font-family", "Arial")
-          .text("Visualizing Youtube Views vs. Spotify Streams with Size Proportional to Duration");
-
-        svg.append("text")
-          .attr("class", "x label")
-          .attr("text-anchor", "end")
-          .attr("x", width/2+80)
-          .attr("y", height-4)
-          .attr("font-family", "Arial")
-          .text("Views");
-          
-        data.forEach( (d, i) => {
-          chartArea.append('circle')
-              .attr('cx', viewsScale(d['Views']))
-              .attr('cy', streamScale(d['Stream']))
-              .attr('r', durationScale(d['Duration_ms']))
-              .attr('class', d['Track'])
-              .attr('opacity', .8)
-              .attr('index', i)
-              .style('fill', 'green') //TODO: does mousover count as interaction
-              .on('mouseover', function (d, i) {
-                d3.select(this).transition()
-                    .duration('50')
-                    .style('fill', 'blue')
-                chartArea.append("text")
-                  .attr("x",10)
-                  .attr("y",20)
-                  .style("font-size","15px")
-                  .text(d3.select(this).attr("class"));
-              })
-              .on('mouseout', function (d, i) {
-                d3.select(this).transition()
-                  .duration('50')
-                  .style('fill', 'green')
-                chartArea.selectAll("text")
-                  .remove()
-              });
-
-        });
-        }, (error) => { console.log(error)} );
-      </script> -->
-    <h3>Graph 2: How Danceability Affects the Proportion of Spotify Streams to YouTube Views (Entire Population)</h3>
-    <p>DESCRIPTION</p>
+    <h3 style="font-family: Arial;">Graph 2: How Danceability Affects the Proportion of Spotify Streams to YouTube Views (Entire Population)</h3>
+    <p style="font-family: Arial;">Now taking valence out of the picture, we break down song popularity into its two components of Spotify streams and YouTube views <br/>and observe how this is affected by danceability. In this visualization, we take the entire population and observe the ratio of the number <br/>of Spotify streams to the number of YouTube views in each danceability range.</p>
     <svg id="graph4" height="500" width="800" style="background: white; margin-left: 80;"></svg>
     <svg id="legend4" height="500" width="250" style="background: white;"> </svg>
     <script>
@@ -304,8 +228,6 @@
 
         let dance_bucket_data = [dance1, dance2, dance3, dance4, dance5, dance6, dance7, dance8, dance9, dance10];
 
-        console.log(dance_bucket_data);
-
         let pop_data = [];
 
         dance_bucket_data.forEach((d, i) =>{
@@ -317,8 +239,6 @@
           })
           pop_data.push([i, (streams / (streams + views)), (views / (streams + views))]);
         })
-
-        console.log("pop data", pop_data);
 
         const widthScale = d3.scaleLinear().domain([0,1]).range([0, chartWidth]);
         const heightScale = d3.scaleLinear().domain([0,1]).range([0, chartHeight]);
@@ -378,10 +298,10 @@
                           .call(bottomAxis);
         //Chart title
         svg.append('text')
-          .attr("x", chartWidth/2 - 190)
+          .attr("x", chartWidth/2 - 260)
           .attr("y", 15)
           .attr("font-family", "Arial")
-          .text("Danceability vs Stream : View Ratio, Entire Population")
+          .text("Visualizing Song Danceability vs Stream : View Ratio, Entire Population")
           .style('fill', 'black');
         svg.append("text")
           .attr("class", "x label")
@@ -464,8 +384,8 @@
       });
     </script>
 
-    <h3>Graph 3: How Danceability Affects the Proportion of Spotify Streams to YouTube Views (Top 20 Most Popular Songs)</h3>
-    <p>DESCRIPTION</p>
+    <h3 style="font-family: Arial;">Graph 3: How Danceability Affects the Proportion of Spotify Streams to YouTube Views (Top 20 Most Popular Songs)</h3>
+    <p style="font-family: Arial;">Finally, we narrow down to the Top 20 Most Popular Songs and observe how danceability affects the stream to view ratio of songs. This visualization <br /> helps us see how the proportion split in the most popular songs compare to the overall population proportion split (indicated by the red lines) in <br /> relation to song danceability.</p>
       <svg id="graph3" height="1200" width="1200" style="background: white;"></svg>
       <svg id="legend3" height="500" width="500" style="background: white;"> </svg>
       <script>
@@ -695,10 +615,10 @@
         //add chart title
         svg.append('text')
           //.attr("text-anchor", "")
-          .attr("x", chartWidth/2 - 150)
+          .attr("x", chartWidth/2 - 260)
           .attr("y", 15)
           .attr("font-family", "Arial")
-          .text("Danceability vs Stream : View Ratio, Top 20 Most Popular Songs")
+          .text("Visualizing Song Danceability vs Stream : View Ratio, Top 20 Most Popular Songs")
           .style('fill', 'black');
 
 
