@@ -58,7 +58,7 @@
 
         const viewsExtent = d3.extent(data, d => d['Views']+d['Stream'] );
         const viewsScale = d3.scaleLinear().domain(viewsExtent)
-                            .range([0, 10]);
+                            .range([0.25, 10.25]);
 
 
 
@@ -161,22 +161,22 @@
               .attr('class', d['Track'])
               .attr('opacity', .8)
               .attr('index', i)
-              .style('fill', get_color(d['Track']))
-              .on('mouseover', function (d, i) {
-                d3.select(this).transition()
-                    .duration('50')
-                chartArea.append("text")
-                  .attr("x",10)
-                  .attr("y",20)
-                  .style("font-size","15px")
-                  .text(d3.select(this).attr("class"));
-              })
-              .on('mouseout', function (d, i) {
-                d3.select(this).transition()
-                  .duration('50')
-                chartArea.selectAll("text")
-                  .remove()
-              });
+              .style('fill', get_color(d['Track']));
+              // .on('mouseover', function (d, i) {
+              //   d3.select(this).transition()
+              //       .duration('50')
+              //   chartArea.append("text")
+              //     .attr("x",10)
+              //     .attr("y",20)
+              //     .style("font-size","15px")
+              //     .text(d3.select(this).attr("class"));
+              // })
+              // .on('mouseout', function (d, i) {
+              //   d3.select(this).transition()
+              //     .duration('50')
+              //   chartArea.selectAll("text")
+              //     .remove()
+              // });
 
         });
         }, (error) => { console.log(error)} );
@@ -251,14 +251,6 @@
           let x = i*chartWidth/10 + 35 + margins.left;
           
           //adding % stream bar on bottom
-          // chartArea.append("line")
-          //     .attr('id', 'streamline')
-          //     .attr('x1', x)
-          //     .attr('x2', x)
-          //     .attr('y1', heightScale(1 - p_stream))
-          //     .attr('y2', heightScale(1))
-          //     .style("stroke", streamStrokes[i])
-          //     .style("stroke-width", 70);
 
           chartArea.append("rect")
               .attr('id', 'streamline')
@@ -279,14 +271,6 @@
 
 
           //add views % on top of bar 
-          // chartArea.append("line")
-          //     .attr('id', 'viewsline')
-          //     .attr('x1', x)
-          //     .attr('x2', x)
-          //     .attr('y1', heightScale(0))
-          //     .attr('y2', heightScale(1 - p_stream))
-          //     .style('stroke', viewsStrokes[i])
-          //     .style('stroke-width', 70);
 
           chartArea.append("rect")
               .attr('id', 'streamline')
@@ -402,7 +386,7 @@
     </script>
 
     <h3 style="font-family: Arial;">Graph 3: How Danceability Affects the Proportion of Spotify Streams to YouTube Views (Top 20 Most Popular Songs)</h3>
-    <p style="font-family: Arial;">Finally, we narrow down to the Top 20 Most Popular Songs and observe how danceability affects the stream to view ratio of songs. This visualization <br /> helps us see how the proportion split in the most popular songs compare to the overall population proportion split (indicated by the red lines) in <br /> relation to song danceability.</p>
+    <p style="font-family: Arial;">Finally, we narrow down to the Top 20 Most Popular Songs and observe how danceability affects the stream to view ratio of songs. This visualization <br /> helps us see how the proportion split in the most popular songs compare to the overall population proportion split (indicated by the red lines) in <br /> relation to song danceability. None of the top 20 songs have danceability less than 0.4, so those buckets are empty.</p>
       <svg id="graph3" height="1150" width="800" style="background: white;"></svg>
       <svg id="legend3" height="1000" width="500" style="background: white;"> </svg>
       <script>
@@ -516,10 +500,6 @@
           let viewsStrokes = ['#e89698', '#f3958c', '#fda981', '#fec286', '#ffd992', '#f6efdb', '#d4ede5', '#7cf4f6', '#61e4ff', '#3dc9ff'];
           let streamStrokes = ['#9B2226', '#AE2012', '#BB3E03', '#CA6702', '#EE9B00', '#E9D8A6', '#94D2BD', '#0A9396', '#005F73', '#001219' ];
       
-          // if(db >= 0 && db < 0.1) { streamStroke = streamStrokes[0]; viewsStroke = viewsStrokes[0];};
-          // if(db >= 0.1 && db < 0.2) { streamStroke = streamStrokes[1]; viewsStroke = viewsStrokes[1];};
-          // if(db >= 0.2 && db < 0.3) { streamStroke = streamStrokes[2]; viewsStroke = viewsStrokes[2];};
-          // if(db >= 0.3 && db < 0.4) { streamStroke = streamStrokes[3]; viewsStroke = viewsStrokes[3];};
           if(db >= 0 && db <= 0.4) { streamStroke = 'white';};
           if(db > 0.4 && db < 0.5) { streamStroke = streamStrokes[4]; viewsStroke = viewsStrokes[4];};
           if(db == 0.5) { streamStroke = 'white';};
@@ -537,18 +517,8 @@
 
 
           //add stream % on bottom of bar
-
           //to switch direction, just switch x's and y's
           let x = i*chartWidth/30 + 10;
-          // svg.append("line")
-          //     .attr('id', 'streamline')
-          //     .attr('x1', x)
-          //     .attr('x2', x)
-          //     .attr('y1', heightScale(1 - p_stream))
-          //     .attr('y2', heightScale(1))
-          //     .style("stroke", streamStroke)
-          //     .style("stroke-width", 20);
-
           svg.append("rect")
               .attr('id', 'streamline')
               .attr('x', x - 10)
@@ -567,16 +537,6 @@
 
 
          //add views % on top of bar 
-
-        //  svg.append("line")
-        //     .attr('id', 'viewsline')
-        //     .attr('x1', x)
-        //     .attr('x2', x)
-        //     .attr('y1', heightScale(0))
-        //     .attr('y2', heightScale(1 - p_stream))
-        //     .style('stroke', viewsStroke)
-        //     .style('stroke-width', 20);
-
         svg.append("rect")
               .attr('id', 'streamline')
               .attr('x', x - 10)
@@ -607,9 +567,6 @@
             .attr('y1', chartHeight + 10)
             .attr('y2', chartHeight + 10)
             .style('stroke', 'black');
-
-        
-        
 
         
         //adding song names as labels
@@ -723,95 +680,7 @@
             .attr('y2', heightScale(.46))
             .style('stroke-width', 3)
             .style('stroke', '#E41751');
-
-        // //Legend
-        // legend.append("line")
-        //   .attr('x1', 30)
-        //   .attr('x2', 30)
-        //   .attr('y1', 400)
-        //   .attr('y2', 250)
-        //   .style('stroke', "#303030")
-        //   .style('stroke-width', 50);
-        // legend.append("line")
-        //   .attr('x1', 30)
-        //   .attr('x2', 30)
-        //   .attr('y1', 250)
-        //   .attr('y2', 100)
-        //   .style('stroke', "#666666")
-        //   .style('stroke-width', 50);
-        // legend.append("line")
-        //   .attr('x1', 0)
-        //   .attr('x2', 60)
-        //   .attr('y1', 240)
-        //   .attr('y2', 240)
-        //   .style('stroke-width', 3)
-        //   .style('stroke', '#E41751');
-
-
-        // // //Bars Key
-        // let legendWidth = legend.attr("width");
-        // legend.append("text")
-        //   .attr("x", (legendWidth/2)-50)
-        //   .attr("y", 50)
-        //   .attr("font-family", "Arial")
-        //   .style("fill", "black")
-        //   .text("KEY");
-        // legend.append("text")
-        //   .attr("x", 70)
-        //   .attr("y", 240)
-        //   .attr("font-family", "Arial")
-        //   .style("fill", "black")
-        //   //.text("Pop. Proportion Split for");
-        // legend.append("text")
-        //   .attr("x", 70)
-        //   .attr("y", 260)
-        //   .attr("font-family", "Arial")
-        //   .style("fill", "black")
-        //   //.text("Corresponding Danceability Range");
-        // legend.append("text")
-        //   .attr("x", 0)
-        //   .attr("y", 80)
-        //   .attr("font-family", "Arial")
-        //   .style("fill", "black")
-        //   .text("Proportion");
-        // legend.append("text")
-        //   .attr("x", 70)
-        //   .attr("y", 180)
-        //   .attr("font-family", "Arial")
-        //   .style("fill", "black")
-        //   .text("Views %");
-        // legend.append("text")
-        //   .attr("x", 70)
-        //   .attr("y", 330)
-        //   .attr("font-family", "Arial")
-        //   .style("fill", "black")
-        //   .text("Stream %");
-        // //Danceability Key
-        // legend.append("text")
-        //   .attr("x", 325)
-        //   .attr("y", 80)
-        //   .attr("font-family", "Arial")
-        //   .style("fill", "black")
-        //   .text("Danceability");
-        // for(let i = 0; i < viewsStrokes.length; i++){
-        //   legend.append("rect")
-        //     .attr("x", 330)
-        //     .attr("y", 105+(i*31))
-        //     .attr("width", 20)
-        //     .attr("height", 10)
-        //     .attr("fill", viewsStrokes[i]);
-        //   legend.append("text")
-        //     .attr("x", 360)
-        //     .attr("y", 120+(i*31))
-        //     .attr("font-family", "Arial")
-        //     .style("fill", "black")
-        //     .text(i===9 ? "0.9-1.0" : `0.${i}-0.${i+1}`);
-        //   legend.append("rect")
-        //     .attr("x", 330)
-        //     .attr("y", 115+(i*31))
-        //     .attr("width", 20)
-        //     .attr("height", 10)
-        //     .attr("fill", streamStrokes[i]);
+       
 
         //legend
         legend.append("line")
