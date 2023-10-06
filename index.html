@@ -17,9 +17,6 @@
       .barlabel20 {
         writing-mode: vertical-rl;
         text-orientation: sideways-right;
-
-        /* /* transform-origin:  */
-        /* transform: rotate(45deg); */
       }
 
     </style>
@@ -170,22 +167,6 @@
               .attr('opacity', .8)
               .attr('index', i)
               .style('fill', get_color(d['Track']));
-              // .on('mouseover', function (d, i) {
-              //   d3.select(this).transition()
-              //       .duration('50')
-              //   chartArea.append("text")
-              //     .attr("x",10)
-              //     .attr("y",20)
-              //     .style("font-size","15px")
-              //     .text(d3.select(this).attr("class"));
-              // })
-              // .on('mouseout', function (d, i) {
-              //   d3.select(this).transition()
-              //     .duration('50')
-              //   chartArea.selectAll("text")
-              //     .remove()
-              // });
-
         });
         }, (error) => { console.log(error)} );
       </script>
@@ -580,16 +561,13 @@
         //adding song names as labels
         let originx = x - 7.5;
         let originy = chartHeight + 10;
-        svg.append('text')
+        let song_Names = svg.append('text')
           .attr("class", "barlabel20")
           .attr('x', x - 7.5)
           .attr('y', chartHeight + 40)
           .attr("font-family", "Arial")
-          //.style('transform-origin', "top left")
-          //.style('transform', 'rotate(45deg)')
-          //.text(d['Track'] + " - " + d['Artist'] + " - Danceability:" + d["Danceability"])
-          //.text(d['Track'] + " - " + d['Artist'])
           .text(d['Track']);
+
 
         //append axis labels as textbox
         if([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9].indexOf(db) != -1) {
@@ -619,7 +597,6 @@
 
         //add chart title
         svg.append('text')
-          //.attr("text-anchor", "")
           .attr("x", chartWidth/2 - 260)
           .attr("y", 15)
           .attr("font-family", "Arial")
