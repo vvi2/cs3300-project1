@@ -250,17 +250,25 @@
 
           let x = i*chartWidth/10 + 35 + margins.left;
           
-          chartArea.append("line")
+          //adding % stream bar on bottom
+          // chartArea.append("line")
+          //     .attr('id', 'streamline')
+          //     .attr('x1', x)
+          //     .attr('x2', x)
+          //     .attr('y1', heightScale(1 - p_stream))
+          //     .attr('y2', heightScale(1))
+          //     .style("stroke", streamStrokes[i])
+          //     .style("stroke-width", 70);
+
+          chartArea.append("rect")
               .attr('id', 'streamline')
-              .attr('x1', x)
-              .attr('x2', x)
-              .attr('y1', heightScale(1 - p_stream))
-              .attr('y2', heightScale(1))
-              .style("stroke", streamStrokes[i])
-              .style("stroke-width", 70);
+              .attr('x', x - 35)
+              .attr('width', 70)
+              .attr('height', heightScale(1) - heightScale(p_views))
+              .attr('y', heightScale(p_views))
+              .style("fill", streamStrokes[i]);
 
           //labelling p_stream bar
-          //TODO: center number on bar
           chartArea.append('text')
             .attr('x', x - 7.5)
             .attr('y', heightScale(1 - p_stream) + 25)
@@ -271,17 +279,24 @@
 
 
           //add views % on top of bar 
-          chartArea.append("line")
-              .attr('id', 'viewsline')
-              .attr('x1', x)
-              .attr('x2', x)
-              .attr('y1', heightScale(0))
-              .attr('y2', heightScale(1 - p_stream))
-              .style('stroke', viewsStrokes[i])
-              .style('stroke-width', 70);
+          // chartArea.append("line")
+          //     .attr('id', 'viewsline')
+          //     .attr('x1', x)
+          //     .attr('x2', x)
+          //     .attr('y1', heightScale(0))
+          //     .attr('y2', heightScale(1 - p_stream))
+          //     .style('stroke', viewsStrokes[i])
+          //     .style('stroke-width', 70);
+
+          chartArea.append("rect")
+              .attr('id', 'streamline')
+              .attr('x', x - 35)
+              .attr('width', 70)
+              .attr('height', heightScale(p_views))
+              .attr('y', heightScale(0))
+              .style("fill", viewsStrokes[i]);
 
           //labelling p_views bar
-          //TODO: center number on bar
           chartArea.append('text')
               .attr('x', i === 0 ? x - 3.5 : x - 7.5)
               .attr('y', heightScale(1 - p_stream) - 10)
@@ -520,34 +535,55 @@
 
 
           //add stream % on bottom of bar
+
           //to switch direction, just switch x's and y's
           let x = i*chartWidth/30 + 10;
-          svg.append("line")
+          // svg.append("line")
+          //     .attr('id', 'streamline')
+          //     .attr('x1', x)
+          //     .attr('x2', x)
+          //     .attr('y1', heightScale(1 - p_stream))
+          //     .attr('y2', heightScale(1))
+          //     .style("stroke", streamStroke)
+          //     .style("stroke-width", 20);
+
+          svg.append("rect")
               .attr('id', 'streamline')
-              .attr('x1', x)
-              .attr('x2', x)
-              .attr('y1', heightScale(1 - p_stream))
-              .attr('y2', heightScale(1))
-              .style("stroke", streamStroke)
-              .style("stroke-width", 20);
+              .attr('x', x - 10)
+              .attr('width', 20)
+              .attr('height', heightScale(1) - heightScale(p_views))
+              .attr('y', heightScale(p_views))
+              .style("fill", streamStroke);
 
           //labelling p_stream bar
           svg.append('text')
-            .attr('x', x - 7.5)
+            .attr('x', x - 8.75)
             .attr('y', heightScale(1 - p_stream) + 25)
             .text(Math.trunc(100*p_stream))
+            .attr("font-family", "Arial")
             .style('fill', 'white');
 
 
          //add views % on top of bar 
-         svg.append("line")
-            .attr('id', 'viewsline')
-            .attr('x1', x)
-            .attr('x2', x)
-            .attr('y1', heightScale(0))
-            .attr('y2', heightScale(1 - p_stream))
-            .style('stroke', viewsStroke)
-            .style('stroke-width', 20);
+
+        //  svg.append("line")
+        //     .attr('id', 'viewsline')
+        //     .attr('x1', x)
+        //     .attr('x2', x)
+        //     .attr('y1', heightScale(0))
+        //     .attr('y2', heightScale(1 - p_stream))
+        //     .style('stroke', viewsStroke)
+        //     .style('stroke-width', 20);
+
+        svg.append("rect")
+              .attr('id', 'streamline')
+              .attr('x', x - 10)
+              .attr('width', 20)
+              .attr('height', heightScale(p_views) - heightScale(0))
+              .attr('y', heightScale(0))
+              .style("fill", viewsStroke);
+
+
 
         //labelling p_views bar
         //making an if statement so phantom bars still have white writing
@@ -556,9 +592,10 @@
           viewtextcolor = 'white';
         };
         svg.append('text')
-            .attr('x', x - 7.5)
+            .attr('x', x - 8.75)
             .attr('y', heightScale(1 - p_stream) - 10)
             .text(100 - Math.trunc(100*p_stream))
+            .attr("font-family", "Arial")
             .style('fill', viewtextcolor);
 
         //adding axis line
@@ -580,6 +617,7 @@
           .attr("class", "barlabel20")
           .attr('x', x - 7.5)
           .attr('y', chartHeight + 40)
+          .attr("font-family", "Arial")
           //.style('transform-origin', "top left")
           //.style('transform', 'rotate(45deg)')
           //.text(d['Track'] + " - " + d['Artist'] + " - Danceability:" + d["Danceability"])
@@ -622,7 +660,7 @@
           .style('fill', 'black');
 
 
-          console.log('ChartWisth');
+          console.log('ChartWidth');
           console.log(chartWidth);
 
         //add mean lines for each bucket
@@ -706,6 +744,8 @@
           .attr('y2', 240)
           .style('stroke-width', 3)
           .style('stroke', '#E41751');
+
+
         //Bars Key
         let legendWidth = legend.attr("width");
         legend.append("text")
@@ -770,6 +810,11 @@
             .attr("width", 20)
             .attr("height", 10)
             .attr("fill", streamStrokes[i]);
+
+            //positioning legend
+            svg.select("legend")
+                .attr('x', 100)
+                .attr('y',100);
         }
 
         
