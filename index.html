@@ -62,7 +62,7 @@
 
 
 
-        let leftAxis = d3.axisLeft(valenceScale); 
+        let leftAxis = d3.axisLeft(valenceScale).ticks(10);
         svg.append('g')
           .attr('class', 'y axis')
           .attr('transform',`translate(${margins.left-10},${margins.top})`) 
@@ -105,6 +105,14 @@
           .attr("y", height-4)
           .attr("font-family", "Arial")
           .text("Danceability");
+        console.log("graph 1 width is ", width);
+        svg.append("text")
+          .attr("text-anchor", "end")
+          .attr("x", 40)
+          .attr("y", height/2)
+          .attr("transform", `rotate(-90) translate(${-(height/2)}, -${width/4})`)
+          .attr("font-family", "Arial")
+          .text("Valence");
 
         let legend1_width = legend1.attr("width");
         let legend1_height = legend1.attr("height");
